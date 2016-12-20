@@ -16,6 +16,7 @@ function net_utils.build_googlecnn(cnn, opt)
     cnn_part:add(cnn:get(i))
   end
 
+  cnn_part:add(nn.View(-1, 4096))
   cnn_part:add(nn.Linear(4096,encoding_size))
   cnn_part:add(cudnn.ReLU(true))
 
