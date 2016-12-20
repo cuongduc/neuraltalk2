@@ -1,5 +1,25 @@
+require 'nn'
+require 'cudnn'
+
 local utils = require 'misc.utils'
 local net_utils = {}
+
+-- specified for GoogleNet
+function net_utils.build_googlecnn(cnn, opt)
+  local layer_num = utils.getopt(opt, 'layer_num', 21)
+  local backend = utils.getopt(opt, 'backend', 'cudnn')
+  local encoding_size = utils.getopt(opt, 'encoding_size', 512)
+
+  local cnn_part = nn.Sequential()
+  for i = 1, layer_num do
+    cnn_part:add(cnn:get(i))
+  end
+
+  cnn_part:add(nn.Linear(4096,encoding_size))
+  cnn_part:add(backend.ReLU(true))
+
+  return cnn_part
+end
 
 -- take a raw CNN from Caffe and perform surgery. Note: VGG-16 SPECIFIC!
 function net_utils.build_cnn(cnn, opt)
