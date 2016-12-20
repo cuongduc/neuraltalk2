@@ -7,7 +7,7 @@ local net_utils = {}
 
 -- specified for GoogleNet
 function net_utils.build_googlecnn(cnn, opt)
-  local layer_num = utils.getopt(opt, 'layer_num', 21)
+  local layer_num = utils.getopt(opt, 'layer_num', 22)
   local backend = utils.getopt(opt, 'backend', 'cudnn')
   local encoding_size = utils.getopt(opt, 'encoding_size', 512)
 
