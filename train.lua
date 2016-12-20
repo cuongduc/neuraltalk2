@@ -57,9 +57,9 @@ cmd:option('-cnn_weight_decay', 0, 'L2 weight decay just for the CNN')
 
 -- Evaluation/Checkpointing
 cmd:option('-val_images_use', 5000, 'how many images to use when periodically evaluating the validation loss? (-1 = all)')
-cmd:option('-save_checkpoint_every', 2500, 'how often to save a model checkpoint?')
-cmd:option('-checkpoint_path', '', 'folder to save checkpoints into (empty = this folder)')
-cmd:option('-language_eval', 0, 'Evaluate language as well (1 = yes, 0 = no)? BLEU/CIDEr/METEOR/ROUGE_L? requires coco-caption code from Github.')
+cmd:option('-save_checkpoint_every', 500, 'how often to save a model checkpoint?')
+cmd:option('-checkpoint_path', 'checkpoints', 'folder to save checkpoints into (empty = this folder)')
+cmd:option('-language_eval', 1, 'Evaluate language as well (1 = yes, 0 = no)? BLEU/CIDEr/METEOR/ROUGE_L? requires coco-caption code from Github.')
 cmd:option('-losses_log_every', 25, 'How often do we snapshot losses, for inclusion in the progress dump? (0 = disable)')
 
 -- misc
@@ -304,7 +304,7 @@ while true do
   -- eval loss/gradient
   local losses = lossFun()
   if iter % opt.losses_log_every == 0 then loss_history[iter] = losses.total_loss end
-  print(string.format('iter %d: %f', iter, losses.total_loss))
+  print(string.format('iter %d: cnn=%s, optim=%s, losses=%f', iter, opt.cnn, opt.optim, losses.total_loss))
 
   -- save checkpoint once in a while (or on final iteration)
   if (iter % opt.save_checkpoint_every == 0 or iter == opt.max_iters) then
@@ -318,7 +318,7 @@ while true do
       val_lang_stats_history[iter] = lang_stats
     end
 
-    local checkpoint_path = path.join(opt.checkpoint_path, 'model_id' .. opt.id)
+    local checkpoint_path = path.join(opt.checkpoint_path, 'model_iter_' .. iter)
 
     -- write a (thin) json report
     local checkpoint = {}
