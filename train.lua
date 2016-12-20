@@ -1,6 +1,7 @@
 require 'torch'
 require 'nn'
 require 'nngraph'
+require 'inn'
 -- exotic things
 require 'loadcaffe'
 -- local imports

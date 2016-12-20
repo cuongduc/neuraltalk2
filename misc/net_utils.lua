@@ -1,5 +1,6 @@
 require 'nn'
 require 'cudnn'
+require 'inn'
 
 local utils = require 'misc.utils'
 local net_utils = {}
