@@ -123,7 +123,7 @@ else
   --local cnn_raw = loadcaffe.load(opt.cnn_proto, opt.cnn_model, cnn_backend)
   local cnn_raw = torch.load(opt.cnn_proto)
 
-  if opt.cnn_model == 'googlenet' then
+  if opt.cnn == 'googlenet' then
     protos.cnn = net_utils.build_googlecnn(cnn_raw, {encoding_size = opt.input_encoding_size, backend = cnn_backend})
   else
     protos.cnn = net_utils.build_cnn(cnn_raw, {encoding_size = opt.input_encoding_size, backend = cnn_backend})
