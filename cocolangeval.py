@@ -9,6 +9,8 @@ import json
 from json import encoder
 encoder.FLOAT_REPR = lambda o: format(o, '.3f')
 import sys
+import os
+import time
 
 input_json = sys.argv[1]
 
@@ -23,9 +25,11 @@ preds = checkpoint['val_predictions']
 # filter results to only those in MSCOCO validation set (will be about a third)
 preds_filt = [p for p in preds if p['image_id'] in valids]
 print 'using %d/%d predictions' % (len(preds_filt), len(preds))
-json.dump(preds_filt, open('tmp.json', 'w')) # serialize to temporary json file. Sigh, COCO API...
+timestamp = str(time.time()).replace('.', '') # timestamp to distinguish results of different running programs.
 
-resFile = 'tmp.json'
+resFile = ''.join(['tmp_', timestamp, '_.json'])
+json.dump(preds_filt, open(resFile, 'w')) # serialize to temporary json file. Sigh, COCO API...
+
 cocoRes = coco.loadRes(resFile)
 cocoEval = COCOEvalCap(coco, cocoRes)
 cocoEval.params['image_id'] = cocoRes.getImgIds()
@@ -37,4 +41,5 @@ for metric, score in cocoEval.eval.items():
     out[metric] = score
 # serialize to file, to be read from Lua
 json.dump(out, open(input_json + '_out.json', 'w'))
-
+print "Remove temp language eval file"
+os.remove(resFile)

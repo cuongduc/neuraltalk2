@@ -85,6 +85,7 @@ if opt.gpuid >= 0 then
   cutorch.setDevice(opt.gpuid + 1) -- note +1 because lua is 1-indexed
 end
 
+print('Model ID: ', opt.id)
 -------------------------------------------------------------------------------
 -- Create the Data Loader instance
 -------------------------------------------------------------------------------
